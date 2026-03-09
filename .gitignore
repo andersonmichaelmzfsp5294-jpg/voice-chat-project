@@ -1,0 +1,20 @@
+# Python
+backend/venv/
+backend/__pycache__/
+backend/*.pyc
+backend/tmp/
+backend/tmp_tts_test/
+backend/tmp_tts_test_v1/
+backend/data/audio/
+backend/data/tts_segments/
+backend/data/chat_store.json
+backend/data/audio_registry.json
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Env
+.env
+.env.*
