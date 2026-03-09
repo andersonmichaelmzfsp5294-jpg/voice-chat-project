@@ -1,17 +1,14 @@
-# 语音聊天项目
+﻿# 语音聊天项目
 
-一个基于 FastAPI + React (Vite) 的语音/文字聊天原型，支持：
-- 文字流式对话（/chat/text/stream）
-- 语音上传转写与对话（/chat/audio / /chat/audio/stream）
-- 历史会话与音频持久化
-- 文本回复后生成整段 TTS 并播放
+一个基于 FastAPI + React (Vite) 的语音/文字聊天原型，支持文本流式回复、语音上传转写、历史会话与 TTS 播放。
 
-## 目录结构
-- `backend/`：FastAPI 后端
-- `frontend/`：Vite + React 前端
+## 后端模块结构
+- `backend/main.py`：入口层（FastAPI app 初始化与 include_router）
+- `backend/routes_*.py`：路由层（仅做请求/响应编排与调用 service）
+- `backend/*_service.py`：业务层（尽量返回普通 Python 数据）
+- `backend/config.py` / `backend/models.py` / `backend/storage_utils.py` / `backend/utils.py`：基础支撑层
 
-## 本地启动
-
+## 启动方式
 ### 后端
 ```bash
 cd backend
@@ -24,36 +21,24 @@ cd frontend
 npm install
 npm run dev
 ```
-
 浏览器访问：
 ```
 http://127.0.0.1:5173
 ```
 
-## 环境变量（最小集合）
-以下变量建议放在你自己的 `.env` 或系统环境变量中：
+## Smoke Test
+在仓库根目录运行：
+```powershell
+.\backend\smoke_test.ps1
+```
+如需指定后端地址：
+```powershell
+$env:SMOKE_BASE_URL="http://127.0.0.1:8001"
+.\backend\smoke_test.ps1
+```
 
-### Ark（文字回复）
-- `ARK_API_KEY`
-- `ARK_MODEL`
-- `ARK_BASE_URL`（可选，默认已设）
-
-### AUC（语音识别）
-- `VOLC_APP_ID`
-- `VOLC_ACCESS_TOKEN`
-- `NGROK_PUBLIC_URL`
-
-### TTS（V1 整段合成）
-- `TTS_APP_ID`
-- `TTS_ACCESS_TOKEN`
-- `TTS_VOICE_TYPE`
-
-## 常用验证
-- `GET /health`
-- `GET /sessions`
-- `POST /chat/text/stream`
-- `POST /tts/full`
-- `POST /chat/audio/stream`
-
-## 说明
-本仓库用于原型开发，代码与接口保持最小可用、可回退为优先。
+## 前后端联调最小说明
+1. 启动后端（8001）。
+2. 启动前端（5173）。
+3. 前端通过 Vite 代理转发 `/chat`、`/sessions`、`/audio`、`/download`、`/health`、`/audio-registry`、`/tts` 到后端。
+4. 打开前端页面发送文本/语音，确认回复与 TTS 播放正常。
